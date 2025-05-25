@@ -1,14 +1,15 @@
 const path = require('path');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 const webpack = require('webpack');
 
 module.exports = {
-  mode: 'development',
+  mode: 'development', // Change to 'production' for builds
   entry: './src/index.js',
   output: {
     filename: 'main.js',
     path: path.resolve(__dirname, 'dist'),
-    clean: true, // optional: cleans the dist folder before each build
+    clean: true, // Cleans dist folder on build
   },
   devServer: {
     static: {
@@ -24,16 +25,14 @@ module.exports = {
         exclude: /node_modules/,
         use: {
           loader: 'babel-loader',
-          options: {
-            presets: ['@babel/preset-env'],
-          },
+          options: { presets: ['@babel/preset-env'] },
         },
       },
       {
-        test: /\.(png|jpe?g|gif|ogg|mp3|wav|mpe?g)$/i,
-        loader: 'file-loader',
-        options: {
-          outputPath: 'assets',
+        test: /\.(png|jpe?g|gif|ogg|mp3|wav)$/i,
+        type: 'asset/resource',
+        generator: {
+          filename: 'assets/[name][ext]',
         },
       },
       {
@@ -43,6 +42,11 @@ module.exports = {
     ],
   },
   plugins: [
+    new HtmlWebpackPlugin({
+      template: './src/index.html', // Use your HTML file as a template
+      filename: 'index.html',
+      inject: 'body',
+    }),
     new CopyWebpackPlugin({
       patterns: [
         {
