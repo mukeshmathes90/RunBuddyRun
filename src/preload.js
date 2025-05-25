@@ -1,3 +1,4 @@
+// src/preload.js
 import Phaser from 'phaser';
 import { gameState } from './boot';
 
@@ -26,7 +27,6 @@ class Preload extends Phaser.Scene {
     }).setOrigin(0.5);
 
     // The event listeners for loading assets
-
     const progressBarWidth = progressBoxWidth - 20;
     const progressBarHeight = progressBoxHeight - 20;
 
@@ -50,7 +50,7 @@ class Preload extends Phaser.Scene {
       loadingText.destroy();
     });
 
-
+    // ... (all your asset loading code remains the same) ...
     // Loading of the assets
     this.load.image('logo', '../assets/gameLogo.png');
     this.load.image('logo2', '../assets/gameLogoTransparent.png');
@@ -95,16 +95,12 @@ class Preload extends Phaser.Scene {
     this.load.audio('killMissile', '../assets/killMissile.ogg');
     this.load.audio('jumpSound', '../assets/jumpSound.mp3');
     this.load.audio('spikeSound', '../assets/spikeSound.mp3');
-
-    // for(let i = 0; i < 200; i ++) {
-    //   this.load.image('logo' + i, '../assets/gameLogo.png');
-    // }
   }
 
   create() {
     this.add.image(this.width / 2, this.height / 2, 'logo');
 
-    this.message = this.add.text(this.scale.width / 2, 30, 'PRESS "ENTER" TO CONTINUE TO MAIN MENU', {
+    this.message = this.add.text(this.scale.width / 2, 30, 'PRESS "ENTER" TO CONTINUE TO MAIN MENU', { // Original text
       fontSize: '25px',
       fill: '#ffffff',
       fontFamily: '"Akaya Telivigala"',
@@ -122,14 +118,38 @@ class Preload extends Phaser.Scene {
       yoyo: true,
     });
 
-    gameState.theme1 = this.sound.add('theme1', { loop: true });
+    gameState.theme1 = this.sound.add('theme1', { loop: true }); // You have this for Menu scene
 
+    // ENTER key listener - Keep this
     this.enter = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ENTER);
+    // The actual 'down' event for ENTER is handled in update()
+
+    // --- START OF THE SIMPLE FIX FOR MOBILE ---
+    // 1. Make the entire screen tappable/clickable
+    this.input.on('pointerdown', () => {
+      // Check if the scene is still active to prevent multiple starts
+      if (this.scene.isActive('Preload')) {
+        // Optionally play a click sound if you have one loaded here
+        // this.sound.play('clickBtnSound'); // If you want a sound for this tap
+        this.scene.stop('Preload');
+        this.scene.start('Menu'); // Go to the Menu scene
+      }
+    });
+
+    // 2. Update the prompt text to include "TAP"
+    this.message.setText("PRESS 'ENTER' OR TAP TO CONTINUE");
+    // --- END OF THE SIMPLE FIX FOR MOBILE ---
   }
 
   update() {
+    // Check if the scene is still active before processing input
+    if (!this.scene.isActive('Preload')) {
+        return;
+    }
+
     if (Phaser.Input.Keyboard.JustDown(this.enter)) {
-      this.scene.stop();
+      // this.sound.play('clickBtnSound'); // If you want a sound for ENTER too
+      this.scene.stop('Preload');
       this.scene.start('Menu');
     }
   }
