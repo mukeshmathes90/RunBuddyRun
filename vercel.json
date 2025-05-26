@@ -3,14 +3,11 @@
   "builds": [
     {
       "src": "package.json",
-      "use": "@vercel/static-build"
+      "use": "@vercel/static-build",
+      "config": { "outputDirectory": "dist" }
     }
   ],
   "routes": [
-    {
-      "src": "/main.js",
-      "dest": "/main.js"
-    },
     {
       "src": "/(.*)",
       "dest": "/index.html"
