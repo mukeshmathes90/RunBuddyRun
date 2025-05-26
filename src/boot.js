@@ -27,7 +27,7 @@ class Boot extends Phaser.Scene {
   }
 
   preload() {
-    this.load.html('form', 'form.html');
+    this.load.html('form', 'assets/form.html');
     this.load.addFile(new WebFontFile(this.load, 'Akaya Telivigala'));
   }
 
