@@ -1,7 +1,7 @@
 import Phaser from 'phaser';
-import CustomButton from '../support_script/CustomButton'; // Corrected path if CustomButton is in support_script
-import { gameState, playStopAudio } from '../boot'; // Corrected path if boot is in root of src
-
+// At the top of src/Menu.js (CORRECTED for Scenario B)
+import CustomButton from './support_script/CustomButton'; // './' means look in current dir (src) for 'support_script'
+import { gameState, playStopAudio } from './boot';          // './' means look in current dir (src) for 'boot.js'
 class Menu extends Phaser.Scene {
   constructor() {
     super({ key: 'Menu' });
